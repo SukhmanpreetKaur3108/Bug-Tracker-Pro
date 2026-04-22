@@ -1,0 +1,27 @@
+# Bug Tracker Pro — Python dependencies
+# Install with:  python -m pip install -r requirements.txt
+
+#  Core 
+flask==3.0.3            # Original Flask app (keep for API reference)
+bcrypt==4.1.3           # Password hashing
+
+#  Streamlit UI 
+streamlit               # Main UI framework
+
+# Data / NLP 
+pandas                  # DataFrames for reports and tables
+scikit-learn            # TF-IDF + cosine similarity (duplicate detection)
+
+# Visualisation 
+plotly                  # Interactive charts (status, severity, timeline)
+
+# AI Summarizer (optional — works without it via rule-based fallback) 
+groq                    # Groq API client (free key at console.groq.com)
+
+#  Export 
+reportlab               # PDF report generation
+pillow                  # Image handling for screenshots
+
+# Testing 
+pytest                  # Unit and integration testing
+selenium                # Browser UI automation (requires ChromeDriver)
