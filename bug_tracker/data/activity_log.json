@@ -1,0 +1,58 @@
+{
+  "logs": [
+    {
+      "id": 1,
+      "bug_id": 1,
+      "changed_by": 1,
+      "field_changed": "assigned_to",
+      "old_value": "None",
+      "new_value": "2",
+      "changed_at": "2026-04-16T10:39:47"
+    },
+    {
+      "id": 2,
+      "bug_id": 1,
+      "changed_by": 1,
+      "field_changed": "status",
+      "old_value": "Open",
+      "new_value": "In Progress",
+      "changed_at": "2026-04-16T10:39:51"
+    },
+    {
+      "id": 3,
+      "bug_id": 2,
+      "changed_by": 5,
+      "field_changed": "status",
+      "old_value": "Open",
+      "new_value": "In Progress",
+      "changed_at": "2026-04-22T04:59:34"
+    },
+    {
+      "id": 4,
+      "bug_id": 2,
+      "changed_by": 5,
+      "field_changed": "assigned_to",
+      "old_value": "None",
+      "new_value": "2",
+      "changed_at": "2026-04-22T05:02:33"
+    },
+    {
+      "id": 5,
+      "bug_id": 1,
+      "changed_by": 5,
+      "field_changed": "assigned_to",
+      "old_value": "2",
+      "new_value": "5",
+      "changed_at": "2026-04-22T05:02:41"
+    },
+    {
+      "id": 6,
+      "bug_id": 1,
+      "changed_by": 5,
+      "field_changed": "assigned_to",
+      "old_value": "5",
+      "new_value": "5",
+      "changed_at": "2026-04-22T05:02:46"
+    }
+  ]
+}
