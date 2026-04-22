@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Report Bug — Bug Tracker{% endblock %}
+
+{% block content %}
+<div class="form-card form-card-wide">
+  <h2>Report a New Bug</h2>
+  <form method="POST" action="{{ url_for('bug_create') }}">
+
+    <div class="form-group">
+      <label for="title">Title <span class="hint">(1–200 chars)</span></label>
+      <input type="text" id="title" name="title" required autofocus
+             minlength="1" maxlength="200" placeholder="Short summary of the bug">
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description <span class="hint">(1–10 000 chars)</span></label>
+      <textarea id="description" name="description" rows="5" required
+                maxlength="10000" placeholder="Full description of the defect…"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="steps">Steps to Reproduce <span class="hint">(optional)</span></label>
+      <textarea id="steps" name="steps" rows="3" maxlength="10000"
+                placeholder="1. Open login page&#10;2. Click Submit without entering credentials&#10;3. Observe…"></textarea>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="severity">Severity</label>
+        <select id="severity" name="severity">
+          <option value="Low">Low</option>
+          <option value="Medium" selected>Medium</option>
+          <option value="High">High</option>
+          <option value="Critical">Critical</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="related_count">Related Bug Count <span class="hint">(known duplicates, ≥ 0)</span></label>
+        <input type="number" id="related_count" name="related_count"
+               value="0" min="0" max="100">
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Submit Bug Report</button>
+      <a href="{{ url_for('bug_list') }}" class="btn btn-ghost">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
