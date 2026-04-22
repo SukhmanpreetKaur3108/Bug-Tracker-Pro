@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Bug Tracker{% endblock %}
+
+{% block content %}
+<h2>Dashboard</h2>
+
+<!-- ── Summary cards ──────────────────────────────────────────────────── -->
+<div class="card-row">
+  <div class="stat-card stat-total">
+    <div class="stat-num">{{ stats.total }}</div>
+    <div class="stat-label">Total Bugs</div>
+  </div>
+  <div class="stat-card stat-open">
+    <div class="stat-num">{{ stats.by_status['Open'] }}</div>
+    <div class="stat-label">Open</div>
+  </div>
+  <div class="stat-card stat-progress">
+    <div class="stat-num">{{ stats.by_status['In Progress'] }}</div>
+    <div class="stat-label">In Progress</div>
+  </div>
+  <div class="stat-card stat-resolved">
+    <div class="stat-num">{{ stats.by_status['Resolved'] }}</div>
+    <div class="stat-label">Resolved</div>
+  </div>
+  <div class="stat-card stat-closed">
+    <div class="stat-num">{{ stats.by_status['Closed'] }}</div>
+    <div class="stat-label">Closed</div>
+  </div>
+</div>
+
+<!-- ── Severity breakdown ─────────────────────────────────────────────── -->
+<div class="section">
+  <h3>Bugs by Severity</h3>
+  <div class="card-row">
+    {% for sev, cls in [('Critical','sev-critical'),('High','sev-high'),('Medium','sev-medium'),('Low','sev-low')] %}
+    <div class="stat-card {{ cls }}">
+      <div class="stat-num">{{ stats.by_severity[sev] }}</div>
+      <div class="stat-label">{{ sev }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- ── Recent activity ────────────────────────────────────────────────── -->
+<div class="section">
+  <h3>Recent Activity</h3>
+  {% if stats.recent_activity %}
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>When</th>
+        <th>Bug #</th>
+        <th>Changed By</th>
+        <th>Field</th>
+        <th>Change</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in stats.recent_activity %}
+      <tr>
+        <td class="mono">{{ entry.changed_at }}</td>
+        <td><a href="{{ url_for('bug_detail', bug_id=entry.bug_id) }}">#{{ entry.bug_id }}</a></td>
+        <td>{{ entry.changer_name }}</td>
+        <td>{{ entry.field_changed }}</td>
+        <td>
+          <span class="old-val">{{ entry.old_value }}</span>
+          &rarr;
+          <span class="new-val">{{ entry.new_value }}</span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <p class="empty-msg">No activity yet. <a href="{{ url_for('bug_create') }}">Report the first bug!</a></p>
+  {% endif %}
+</div>
+
+<div class="section">
+  <a href="{{ url_for('bug_list') }}" class="btn btn-primary">View All Bugs</a>
+  <a href="{{ url_for('bug_create') }}" class="btn btn-secondary">+ Report New Bug</a>
+</div>
+{% endblock %}
