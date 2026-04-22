@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Bug List — Bug Tracker{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>Bug List</h2>
+  <a href="{{ url_for('bug_create') }}" class="btn btn-primary">+ New Bug</a>
+</div>
+
+<!-- ── Search & Filter bar ────────────────────────────────────────────── -->
+<form method="GET" action="{{ url_for('bug_list') }}" class="filter-bar">
+  <input type="text" name="q" value="{{ keyword }}" placeholder="Search title or description…" class="filter-input">
+
+  <select name="status" class="filter-select">
+    <option value="">All Statuses</option>
+    {% for s in ['Open', 'In Progress', 'Resolved', 'Closed'] %}
+      <option value="{{ s }}" {% if status == s %}selected{% endif %}>{{ s }}</option>
+    {% endfor %}
+  </select>
+
+  <select name="severity" class="filter-select">
+    <option value="">All Severities</option>
+    {% for s in ['Critical', 'High', 'Medium', 'Low'] %}
+      <option value="{{ s }}" {% if severity == s %}selected{% endif %}>{{ s }}</option>
+    {% endfor %}
+  </select>
+
+  <select name="sort" class="filter-select">
+    <option value="priority_score" {% if sort_by == 'priority_score' %}selected{% endif %}>Sort: Priority Score</option>
+    <option value="created_at"     {% if sort_by == 'created_at'     %}selected{% endif %}>Sort: Date Reported</option>
+    <option value="severity"       {% if sort_by == 'severity'       %}selected{% endif %}>Sort: Severity</option>
+  </select>
+
+  <button type="submit" class="btn btn-secondary">Apply</button>
+  <a href="{{ url_for('bug_list') }}" class="btn btn-ghost">Clear</a>
+</form>
+
+<!-- ── Bug table ──────────────────────────────────────────────────────── -->
+{% if bugs %}
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Title</th>
+      <th>Severity</th>
+      <th>Status</th>
+      <th>Priority Score</th>
+      <th>Reported By</th>
+      <th>Assignee</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for bug in bugs %}
+    <tr>
+      <td><a href="{{ url_for('bug_detail', bug_id=bug.id) }}">#{{ bug.id }}</a></td>
+      <td><a href="{{ url_for('bug_detail', bug_id=bug.id) }}">{{ bug.title }}</a></td>
+      <td><span class="badge sev-{{ bug.severity | lower }}">{{ bug.severity }}</span></td>
+      <td><span class="badge status-{{ bug.status | lower | replace(' ', '-') }}">{{ bug.status }}</span></td>
+      <td class="score-cell">
+        <div class="score-bar-wrap">
+          <div class="score-bar" style="width: {{ bug.priority_score }}%"></div>
+        </div>
+        {{ "%.1f" | format(bug.priority_score) }}
+      </td>
+      <td>{{ bug.reporter_name }}</td>
+      <td>{{ bug.assignee_name }}</td>
+      <td class="mono">{{ bug.created_at[:10] }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+  <p class="empty-msg">No bugs match your filters. <a href="{{ url_for('bug_list') }}">Clear filters</a></p>
+{% endif %}
+{% endblock %}
