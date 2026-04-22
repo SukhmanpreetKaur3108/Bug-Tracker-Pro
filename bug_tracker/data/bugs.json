@@ -1,0 +1,36 @@
+{
+  "bugs": [
+    {
+      "id": 1,
+      "title": "adsdnnd",
+      "description": "i was testing this website and it was lagging a lot",
+      "steps_to_reproduce": "",
+      "severity": "Low",
+      "priority": "Low",
+      "priority_score": 20.0,
+      "status": "In Progress",
+      "reported_by": 1,
+      "assigned_to": 5,
+      "created_at": "2026-04-16T10:39:39",
+      "updated_at": "2026-04-22T05:02:46"
+    },
+    {
+      "id": 2,
+      "title": "Black screen displayed immediately after successful user login",
+      "description": "After entering valid login credentials and clicking the Login button, the system authenticates successfully but redirects the user to a blank black screen instead of loading the dashboard interface. No error message is displayed.  \nEnvironment: Windows 10, Chrome v121",
+      "steps_to_reproduce": "",
+      "severity": "High",
+      "priority": "Medium",
+      "priority_score": 35.0,
+      "status": "In Progress",
+      "reported_by": 5,
+      "assigned_to": 2,
+      "module": "Dashboard",
+      "screenshot_paths": [
+        "D:\\My Projects\\SET Viva\\bug_tracker\\data\\screenshots\\bug_2_black screen.jpg"
+      ],
+      "created_at": "2026-04-22T04:55:48",
+      "updated_at": "2026-04-22T05:02:33"
+    }
+  ]
+}
