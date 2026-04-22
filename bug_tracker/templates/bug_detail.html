@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block title %}Bug #{{ bug.id }} — Bug Tracker{% endblock %}
+
+{% block content %}
+
+<!-- ── Bug header ─────────────────────────────────────────────────────── -->
+<div class="page-header">
+  <h2>
+    <span class="muted">#{{ bug.id }}</span> {{ bug.title }}
+  </h2>
+  <div class="header-actions">
+    <a href="{{ url_for('bug_edit', bug_id=bug.id) }}" class="btn btn-secondary">Edit</a>
+    {% if current_user.role == 'Admin' %}
+    <form method="POST" action="{{ url_for('bug_delete', bug_id=bug.id) }}"
+          onsubmit="return confirm('Permanently delete bug #{{ bug.id }}?');" style="display:inline">
+      <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
+
+<!-- ── Meta row ───────────────────────────────────────────────────────── -->
+<div class="meta-row">
+  <span class="badge sev-{{ bug.severity | lower }}">{{ bug.severity }}</span>
+  <span class="badge status-{{ bug.status | lower | replace(' ', '-') }}">{{ bug.status }}</span>
+  <span class="badge priority-score">Score: {{ "%.1f" | format(bug.priority_score) }} / 100</span>
+  <span class="meta-item">Reporter: <strong>{{ reporter.get('username', '—') }}</strong></span>
+  <span class="meta-item">Assignee: <strong>{{ assignee.username if assignee else '—' }}</strong></span>
+  <span class="meta-item mono">Reported: {{ bug.created_at[:10] }}</span>
+  <span class="meta-item mono">Updated: {{ bug.updated_at[:10] }}</span>
+</div>
+
+<!-- ── Description ────────────────────────────────────────────────────── -->
+<div class="section">
+  <h3>Description</h3>
+  <div class="detail-box">{{ bug.description }}</div>
+</div>
+
+{% if bug.steps_to_reproduce %}
+<div class="section">
+  <h3>Steps to Reproduce</h3>
+  <div class="detail-box">{{ bug.steps_to_reproduce }}</div>
+</div>
+{% endif %}
+
+<!-- ── Actions ────────────────────────────────────────────────────────── -->
+<div class="section two-col-actions">
+
+  <!-- Status transition -->
+  {% if allowed_next %}
+  <div class="action-card">
+    <h4>Change Status</h4>
+    <form method="POST" action="{{ url_for('bug_status', bug_id=bug.id) }}">
+      <select name="status" class="filter-select">
+        {% for s in allowed_next %}
+          <option value="{{ s }}">{{ s }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+  </div>
+  {% else %}
+  <div class="action-card">
+    <h4>Status</h4>
+    <p class="muted">Bug is <strong>{{ bug.status }}</strong> (terminal state).</p>
+  </div>
+  {% endif %}
+
+  <!-- Assignment -->
+  <div class="action-card">
+    <h4>Assign To</h4>
+    <form method="POST" action="{{ url_for('bug_assign', bug_id=bug.id) }}">
+      <select name="developer_id" class="filter-select">
+        <option value="">— Unassigned —</option>
+        {% for dev in developers %}
+          <option value="{{ dev.id }}" {% if bug.assigned_to == dev.id %}selected{% endif %}>
+            {{ dev.username }} ({{ dev.role }})
+          </option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-primary">Assign</button>
+    </form>
+  </div>
+
+</div>
+
+<!-- ── Comments ───────────────────────────────────────────────────────── -->
+<div class="section">
+  <h3>Comments ({{ comments | length }})</h3>
+
+  {% for c in comments %}
+  <div class="comment-card">
+    <div class="comment-meta">
+      <strong>{{ c.author_name }}</strong>
+      <span class="mono muted">{{ c.created_at }}</span>
+    </div>
+    <div class="comment-body">{{ c.content }}</div>
+  </div>
+  {% else %}
+    <p class="empty-msg">No comments yet.</p>
+  {% endfor %}
+
+  <form method="POST" action="{{ url_for('bug_comment', bug_id=bug.id) }}" class="comment-form">
+    <textarea name="content" rows="3" maxlength="5000"
+              placeholder="Add a comment…" required></textarea>
+    <button type="submit" class="btn btn-secondary">Post Comment</button>
+  </form>
+</div>
+
+<!-- ── Activity history ───────────────────────────────────────────────── -->
+<div class="section">
+  <h3>Change History</h3>
+  {% if history %}
+  <table class="data-table">
+    <thead>
+      <tr><th>When</th><th>By</th><th>Field</th><th>From</th><th>To</th></tr>
+    </thead>
+    <tbody>
+      {% for h in history %}
+      <tr>
+        <td class="mono">{{ h.changed_at }}</td>
+        <td>{{ h.changer_name }}</td>
+        <td>{{ h.field_changed }}</td>
+        <td class="old-val">{{ h.old_value }}</td>
+        <td class="new-val">{{ h.new_value }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <p class="empty-msg">No changes recorded yet.</p>
+  {% endif %}
+</div>
+
+<div class="section">
+  <a href="{{ url_for('bug_list') }}" class="btn btn-ghost">&larr; Back to Bug List</a>
+</div>
+
+{% endblock %}
